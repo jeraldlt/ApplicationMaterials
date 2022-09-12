@@ -74,6 +74,9 @@
 \RequirePackage{unicode-math}
 % Needed to use icons from font-awesome
 % (https://github.com/posquit0/latex-fontawesome)
+\defaultfontfeatures{
+	Path = /usr/share/texmf-dist/fonts/opentype/public/fontawesome
+}
 \RequirePackage{fontawesome}
 \RequirePackage[default,opentype]{sourcesanspro}
 % Needed for the photo ID
@@ -160,7 +163,7 @@
 %                Configuration for fonts
 %-------------------------------------------------------------------------------
 % Set the FontAwesome font to be up-to-date.
-\newfontfamily\FA[Path=\@fontdir]{FontAwesome}
+\renewfontfamily\FA[Path=\@fontdir]{FontAwesome}
 % Set font for header (default is Roboto)
 \newfontfamily\headerfont[
   Path=\@fontdir,
@@ -195,7 +198,7 @@
 \newcommand*{\headerquotestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\itshape\color{darktext} #1}}
 \newcommand*{\footerstyle}[1]{{\fontsize{8pt}{1em}\footerfont\scshape\color{lighttext} #1}}
 \newcommand*{\sectionstyle}[1]{{\fontsize{16pt}{1em}\bodyfont\bfseries\color{text}\sectioncolor{#1}}}
-\newcommand*{\subsectionstyle}[1]{{\fontsize{12pt}{1em}\bodyfont\scshape\textcolor{text}{#1}}}
+\newcommand*{\subsectionstyle}[1]{{\fontsize{12pt}{1em}\bodyfont\bfseries\textcolor{awesome}{#1}}}
 \newcommand*{\paragraphstyle}{\fontsize{9pt}{1em}\bodyfontlight\upshape\color{text}}
 
 % For elements of entry
@@ -492,11 +495,12 @@
   \color{gray}\vhrulefill{0.9pt}
 }
 
+
 % Define a subsection for CV
 % Usage: \cvsubsection{<subsection-title>}
 \newcommand{\cvsubsection}[1]{%
   \vspace{\acvSectionContentTopSkip}
-  \vspace{-3mm}
+  %\vspace{-3mm}
   \subsectionstyle{#1}
   \phantomsection
 }
@@ -607,4 +611,33 @@
   \end{itemize}
   \end{justify}
   \vspace{-4.0mm}
+}
+
+
+% Define an environment for cventry
+\newenvironment{cvpubs}{%
+  \vspace{\acvSectionContentTopSkip}
+  \begin{center}
+  \newcounter{npubs}
+}{%
+  \end{center}
+}
+
+% Define an entry of cv information
+% Usage: \cvpub{<authors>}{<title>}{<date>}{<publisher>}
+\newcommand*{\cvpub}[4]{%
+  \vspace{-2.0mm}
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+    \ifempty{#1#3}
+      {\entrytitlestyle{#2} \\
+        \multicolumn{1}{L{\textwidth}}{\descriptionstyle{#4}}}
+      {\ifempty{#2#3}
+          {\entrypositionstyle{#1} & \\}
+          {\entrytitlestyle{#2} & \entrylocationstyle{#3} \\
+            \entrypositionstyle{#1} & \\}
+        \multicolumn{2}{L{\textwidth}}{\descriptionstyle{#4}}}
+  \end{tabular*}%
+  \stepcounter{npubs}
 }
