@@ -8,7 +8,13 @@ research: JeraldThomas_Research clean
 teaching: JeraldThomas_Teaching clean
 diversity: JeraldThomas_Diversity clean
 references: JeraldThomas_References clean
+research_teaching: JeraldThomas_Research_Teaching clean
 
+JeraldThomas_Research_Teaching: research_teaching.tex
+	-latexmk -xelatex -f -use-make -interaction=nonstopmode -jobname=$@ $<
+	-latexmk -c -jobname $@ $<
+	-mv $@.pdf output
+	-mv $@.log output
 
 JeraldThomas_CV: cv.tex
 	-latexmk -xelatex -f -use-make -interaction=nonstopmode -jobname=$@ $<
